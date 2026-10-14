@@ -1,0 +1,4 @@
+# The bundled list must be checked out with LF. The loader tolerates CRLF, but
+# a core.autocrlf=true checkout otherwise inserts \r into every word, which
+# breaks the Tab popup (see lib/wordlist.ts).
+words.txt text eol=lf

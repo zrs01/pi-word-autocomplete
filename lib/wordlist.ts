@@ -21,7 +21,9 @@ export interface Wordlist {
 export async function loadWordlist(wordsFile: string): Promise<Wordlist> {
 	const t0 = performance.now()
 	const raw = await readFile(wordsFile, "utf8")
-	const words = raw.split("\n").filter(Boolean)
+	// CRLF-tolerant: a Windows checkout (core.autocrlf=true) rewrites the
+	// bundled LF list to CRLF, and a trailing \r breaks every lookup.
+	const words = raw.split(/\r?\n/).filter(Boolean)
 	const t1 = performance.now()
 	const index = buildIndex(words)
 	const t2 = performance.now()

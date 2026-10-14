@@ -3,6 +3,7 @@ import { mkdtemp, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { loadWordlist } from "../lib/wordlist.ts"
+import { contains } from "../lib/suggest.ts"
 
 async function tmpFile(content: string): Promise<string> {
 	const dir = await mkdtemp(join(tmpdir(), "dict-words-"))
@@ -16,6 +17,13 @@ describe("loadWordlist", () => {
 		const wl = await loadWordlist(await tmpFile("abandon\nabsolute\nrun\n"))
 		expect(wl.stats.words).toBe(3)
 		expect(wl.index.sorted).toEqual(["abandon", "absolute", "run"]) // sorted for binary search
+	})
+
+	test("parses CRLF file (Windows checkout)", async () => {
+		const wl = await loadWordlist(await tmpFile("abandon\r\nabsolute\r\nrun\r\n"))
+		expect(wl.stats.words).toBe(3)
+		expect(wl.index.sorted).toEqual(["abandon", "absolute", "run"])
+		expect(contains(wl.index, "absolute")).toBe(true)
 	})
 
 	test("sorts unsorted input", async () => {
