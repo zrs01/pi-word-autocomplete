@@ -4,14 +4,13 @@ Word **autocomplete** and **spelling correction** in pi's input editor.
 One plain word list (`words.txt`, 41k words, 0.37 MB), no runtime dependencies.
 
 ```bash
-pi install npm:pi-word-autocomplete   # or: pi -e .  from a clone
+pi install git:github.com/zrs01/pi-word-autocomplete
 ```
 
-The repo root is the package: `package.json` declares `pi.extensions:
-["./index.ts"]` and the `pi-package` keyword, which is what
-[pi.dev/packages](https://pi.dev/packages) indexes once published to npm. Git
-installs (`pi install git:<host>/<repo>`) work but never appear in the gallery —
-it scans npm only.
+This package is distributed from this repository only — it is **not** published
+to npm, so `npm:pi-word-autocomplete` and the [pi.dev/packages](https://pi.dev/packages)
+gallery (which indexes npm) do not apply. To run it from a clone instead of
+installing: `pi -e .`
 
 ## Use
 
