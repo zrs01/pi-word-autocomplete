@@ -52,7 +52,9 @@ export function extractToken(line: string, cursorCol: number): string | undefine
 	const prev = before[m.index - 1]
 	// After a special char the token belongs to another provider
 	// (slash command, @file, #ref, ~/path, version-like v1.abc) or is a path part.
-	if (prev !== undefined && "/@#~$\\.".includes(prev)) return undefined
+	// \r: a pasted CRLF buffer keeps a bare CR mid-line; completing there would
+	// render a popup over a row whose left half is overwritten by that CR.
+	if (prev !== undefined && "/@#~$\\.\r".includes(prev)) return undefined
 	// Inside a slash command line ("/cmd ..."): first word is a command.
 	if (/^\s*\/[^\s]*$/.test(before) || /^\s*\//.test(before)) return undefined
 	return m[1]

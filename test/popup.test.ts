@@ -6,7 +6,7 @@
 import { describe, expect, test } from "bun:test"
 import { CombinedAutocompleteProvider, Editor, type TUI } from "@earendil-works/pi-tui"
 import { join } from "node:path"
-import { createWordProvider } from "../lib/provider.ts"
+import { createWordProvider, extractToken } from "../lib/provider.ts"
 import { loadWordlist } from "../lib/wordlist.ts"
 
 const id = (s: string) => s
@@ -49,5 +49,20 @@ describe("completion popup (real pi-tui editor)", () => {
 			expect(item.value).not.toMatch(/[\x00-\x1f\x7f]/)
 			expect(item.label).not.toMatch(/[\x00-\x1f\x7f]/)
 		}
+	})
+
+	test("a bare CR in the buffer is not a completable token boundary", async () => {
+		// A pasted CRLF buffer can leave a lone carriage return mid-line; completing there
+		// would draw the popup over a row whose left half that CR overwrites on screen.
+		const wl = await loadWordlist(join(import.meta.dir, "..", "words.txt"))
+		const provider = createWordProvider(() => wl.index, new CombinedAutocompleteProvider([], process.cwd(), null), {
+			minPrefix: 3,
+			maxVisible: 20,
+			maxDistance: 2,
+		})
+		const line = "one\rwaterr"
+		expect(extractToken(line, line.length)).toBeUndefined()
+		const s = await provider.getSuggestions([line], 0, line.length, { signal: new AbortController().signal, force: true })
+		expect(s?.items.some((i) => i.description?.startsWith("did you mean")) ?? false).toBe(false)
 	})
 })
