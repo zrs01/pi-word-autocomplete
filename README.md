@@ -59,9 +59,10 @@ work at — keying only delete-1 forms silently drops that whole typo class.
 ## Test
 
 ```bash
-bun test              # suggest, wordlist, settings, provider contract, and
-                      # index.ts through a fake-pi harness (no API key needed)
-bun x tsc --noEmit    # 62 tests; 100% line + function coverage of index.ts and lib/
+bun test              # suggest, wordlist, settings, provider contract, the real
+                      # pi-tui Tab popup, and index.ts through a fake-pi harness
+                      # (no API key needed)
+bun x tsc --noEmit    # 65 tests; 100% line + function coverage of index.ts and lib/
 ```
 
 Manual TUI check (unit tests can't exercise pi's completion wiring):
@@ -75,6 +76,12 @@ tmux kill-session -t word
 
 Expect `41095 words` with no load error, then `water … did you mean (ed=1)` as
 the first completion.
+
+On Windows (no tmux) the same wiring is covered by `test/popup.test.ts`, which
+drives pi-tui's real `Editor` and asserts Tab makes the popup visible. `words.txt`
+is pinned to LF by `.gitattributes`: a `core.autocrlf=true` checkout otherwise
+puts a `\r` on every word, and the popup silently never appears (a lone match is
+auto-applied by pi instead of shown).
 
 ## License
 
