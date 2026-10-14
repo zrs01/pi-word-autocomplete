@@ -4,7 +4,7 @@ import { homedir } from "node:os"
 import { dirname, join } from "node:path"
 
 export interface Settings {
-	/** word list file ("word\tfreq" per line); default: words.txt next to the extension */
+	/** word list file (one lowercase word per line); default: the bundled words.txt */
 	wordsFile?: string
 	minPrefix: number
 	maxVisible: number
