@@ -1,0 +1,26 @@
+# deps
+node_modules/
+
+# build / tooling output
+dist/
+build/
+*.tsbuildinfo
+
+# test / coverage
+coverage/
+.nyc_output/
+
+# env & local overrides
+.env
+.env.*
+!.env.example
+*.local
+
+# editors / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# pi extension installs (if linked locally)
+.pi/
